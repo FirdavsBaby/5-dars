@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <title>Document</title>
+    </style>
+</head>
+<body class="d-flex min-vh-100 align-items-center justify-content-center w-100 text-bg-dark">
+    <form class="w-50 d-flex flex-column">
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Title</label>
+          <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        </div>
+        <div class="mb-3">
+          <label for="exampleInputPassword1" class="form-label">Text</label>
+          <input type="text" class="form-control" id="exampleInputPassword1">
+        </div>
+        <div class="mb-3">
+          <label for="formFile" class="form-label">Choose your post image</label>
+          <input class="form-control" type="file" id="formFile">
+        </div>
+        <button type="submit" class="btn btn-primary w-100" id="add_btn">Add</button>
+      </form>
+</body>
+<script>
+  const cookie = document.cookie.split("=")[0]
+      if (cookie !== "token") {
+        window.location.replace("http://localhost:5000/auth/login")
+      }
+    const title = document.querySelector("#exampleInputEmail1")
+    const text = document.querySelector("#exampleInputPassword1")
+    const photo = document.querySelector("#formFile")
+    const btn = document.querySelector("#add_btn")
+
+    async function handleAddPost(e) {
+        e.preventDefault()
+        if (!title.value || !text.value || !photo.files[0]) {
+          alert("Please field all the fields!")
+          return
+        }
+        const form = new FormData()
+        form.append("title", title.value)
+        form.append("text", text.value)
+        form.append("image", photo.files[0])
+       const data = await fetch("http://localhost:5000/posts/addPost", {
+          method: "POST",
+          body: form 
+       })
+       window.location.replace("http://localhost:5000/posts")
+      }
+      btn.addEventListener("click", handleAddPost)
+
+</script>
+</html>
